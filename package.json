@@ -1,0 +1,24 @@
+{
+  "name": "skywrite",
+  "version": "1.0.0",
+  "description": "A lightweight cloud based pictogram game",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodejs app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjc734/skywrite.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cjc734/skywrite/issues"
+  },
+  "homepage": "https://github.com/cjc734/skywrite#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
+  }
+}
