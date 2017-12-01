@@ -45,9 +45,6 @@ function prepareCanvas()
 	context.fillStyle = "#00bfff";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
-	this.offsetTop -= 100;
-	this.offsetLeft -= 200;
-
 	crayonTextureImage.onload = function() { resourceLoaded();
 	};
 	crayonTextureImage.src = "assets/images/crayon-texture-update3.png";
@@ -59,20 +56,19 @@ function prepareCanvas()
 	// Add mouse events
 	// ----------------
 	$('#canvas').mousedown(function(e){
-  var mouseX = e.pageX - this.offsetLeft;
-  var mouseY = e.pageY - this.offsetTop;
+  var mouseX = e.pageX - $('#canvas').get(0).offsetLeft;
+  var mouseY = e.pageY - $('#canvas').get(0).offsetTop;
+  document.querySelector("#sfx1").play();
 
   paint = true;
-  addClick(e.pageX - this.offsetLeft - 200, e.pageY - this.offsetTop - 100);
+  addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, false);
   redraw();
 });
 
 	$('#canvas').mousemove(function(e){
-		if(paint==true){
-			addClick(e.pageX - this.offsetLeft - 200, e.pageY - this.offsetTop - 100, true);
-		}
-		planeX = e.pageX - this.offsetLeft - 200;
-		planeY = e.pageY - this.offsetTop - 100;
+		addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, paint);
+		planeX = e.pageX - $('#canvas').get(0).offsetLeft;
+		planeY = e.pageY - $('#canvas').get(0).offsetTop;
 		redraw();
 	});
 
@@ -125,15 +121,17 @@ function redraw(){
   context.lineWidth = 5;
 
   for(var i=0; i < clickX.length; i++) {
+	  if(clickDrag[i]) {
     context.beginPath();
-    if(clickDrag[i] && i){
+    if(i){
       context.moveTo(clickX[i-1], clickY[i-1]);
      }else{
        context.moveTo(clickX[i]-1, clickY[i]);
      }
      context.lineTo(clickX[i], clickY[i]);
      context.closePath();
-     context.stroke();
+	 context.stroke();
+	}
   }
 
 	var len = clickX.length - 1;
@@ -144,12 +142,9 @@ function redraw(){
 	currY = clickY[len];
 	currX = clickX[len];
 
-	angle = Math.sin((prevY - currY ) / (prevX - currX));
-
-
+	angle = Math.atan2(currY - prevY, currX - prevX);
 
 	context.drawImage(crayonTextureImage, 0, 0, canvasWidth, canvasHeight);
-
 
 	context.save();
 	context.translate(planeX, planeY);
@@ -162,6 +157,3 @@ function redraw(){
 
 
 }
-
-
-/**/

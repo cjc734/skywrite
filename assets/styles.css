@@ -1,0 +1,17 @@
+#canvasDiv > canvas {
+    display: block;
+    margin: 0 auto;
+    cursor: none;
+    border: 5px solid #eee;
+}
+
+#logo {
+    height: 100px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+body {
+    background-color: #00bfff;
+}
