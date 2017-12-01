@@ -50,11 +50,11 @@ function prepareCanvas()
 
 	crayonTextureImage.onload = function() { resourceLoaded();
 	};
-	crayonTextureImage.src = "images/crayon-texture-update3.png";
+	crayonTextureImage.src = "assets/images/crayon-texture-update3.png";
 
 	planeImage.onload = function() { resourceLoaded();
 	};
-	planeImage.src = "images/skywrite-cursor1.png";
+	planeImage.src = "assets/images/skywrite-cursor1.png";
 
 	// Add mouse events
 	// ----------------
