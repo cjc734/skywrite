@@ -1,5 +1,5 @@
-var funnyWords = ["buccaneer","floozy","monkey","Shih Tzu","succubus",
-"viper","weasel","baby","church","bear","water","ball","brethren","chicken",
+var funnyWords = ["pirate","monkey","succubus","sausage","tool",
+"viper","weasel","baby","church","bear","water","ball","brother","chicken",
 "pot","corn","cake","day","dentist","cup","dragon","lantern","chef","grandma",
 "laptop","grave","ice cream","killer","jet","ski","jungle","cat","knight","bulb",
 "locker","egg","pillow","rocket","sheep","shoe","snake","car","pig","phone",
