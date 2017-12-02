@@ -136,8 +136,23 @@ function redraw(){
 
 	var len = clickX.length - 1;
 
-	prevX = clickX[len-1];
-	prevY = clickY[len-1];
+	function smoothPrev(arr) {
+		var smoothI = arr.length - 2;
+		var sum = 0;
+		var num = 0;
+		while(smoothI > 0 && smoothI > arr.length - 10) {
+			sum += arr[smoothI--];
+			num++;
+		}
+		if (num > 0) {
+			return sum / num;
+		} else {
+			return arr[smoothI + 1];
+		}
+	}
+
+	prevX = smoothPrev(clickX);
+	prevY = smoothPrev(clickY);
 
 	currY = clickY[len];
 	currX = clickX[len];
@@ -151,7 +166,7 @@ function redraw(){
 
 	context.rotate(angle);
 
-	context.drawImage(planeImage,  -25, -25, 50, 50);
+	context.drawImage(planeImage,  -38, -21, 76, 43);
 
 	context.restore();
 
