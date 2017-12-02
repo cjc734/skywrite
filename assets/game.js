@@ -1,5 +1,4 @@
-var socket = io.connect('http://localhost:3000');
-
+var socket = io.connect('http://skywrite.website');
 
 const gameStates = {
     NOT_CONNECTED: 0,
