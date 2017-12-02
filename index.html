@@ -3,25 +3,50 @@
 <head>
     <title>Skywrite</title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
-    <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
-    <script type="text/javascript" src="assets/Drawing.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript" src="assets/Drawing.js"></script>
+    
+    <script type="text/javascript" src="assets/game.js"></script>
     <link rel="stylesheet" href="assets/styles.css">
   </head>
-  <body>
-    <img src="assets/images/logo.png" id="logo">
-    <div id="canvasDiv"></div>
-    <script type="text/javascript"> $(document).ready(function() {
-    	 prepareCanvas();
-});</script>
-<audio id="sfx1" src="assets/sfx1.mp3" ></audio>
+  <body ng-app="skywrite">
+    <div ng-controller="GameController as game">
+      <img src="assets/images/logo.png" id="logo">
+      <div ng-switch="game.curState">
+        <div ng-switch-when="0">
+            <input ng-model="game.nickname" placeholder="Enter Nickname">
+            <button type="button" ng-click="game.join()">
+              Set Name
+            </button>
+        </div>
+        <div ng-switch-when="1">
+          Lobby:
+          <ul>
+            <li ng-repeat="player in game.players">
+              {{player}}
+            </li>
+          </ul>
+          <button type="button" ng-click="game.start()">
+            Start Game!
+          </button>
+        </div>
+        <div ng-switch-when="2">
+            <div id="canvasDiv"></div>
+            <div ng-switch="game.isPilot">
+              <div ng-switch-when="true">
+                  You are the pilot! Your word is {{game.word}}
+              </div>
+              <div ng-switch-default>
+                  Guess: <input ng-model="game.guess"><button type="button" ng-click="game.sendGuess()">Guess!</button>
+              </div>
+            </div>
+            <audio id="sfx1" src="assets/sfx1.mp3" ></audio>
+        </div>
+        <div ng-switch-when="3">
+          GAME OVER!
+        </div>
+      </div>
+    </div>
   </body>
 </html>
-
-<!-- Socket.io Code -->
-<script>
-    var socket = io.connect('http://localhost:3000/');
-    socket.on('connect', function (data) {
-        socket.emit('join', 'Hello World from client');
-    });
-</script>
