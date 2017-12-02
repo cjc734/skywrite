@@ -3,7 +3,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-//var funnyWords = require('funnyWords');
+var funnyWords = require('./funnyWords');
 
 app.use('/assets', express.static(__dirname + '/assets'));
 app.get('/', function (req, res, next) {
@@ -25,6 +25,13 @@ let pilot = null;
 let answer = null;
 
 
+function reset() {
+    let players = {};
+    answer = null;
+    pilot = null;
+    curState = gameStates.LOBBY;
+}
+
 io.on('connection', function (client) {
     console.log('Client connected...');
 
@@ -42,23 +49,42 @@ io.on('connection', function (client) {
     client.on('disconnect', function () {
         if(nickname) {
             delete players[nickname];
+            console.log(nickname + ' disconnected');
         }
-        io.sockets.emit('players', JSON.stringify(Object.keys(players)));
+        if (Object.keys(players).length > 0) {
+            io.sockets.emit('players', JSON.stringify(Object.keys(players)));
+        } else {
+            console.log('All players disconnected');
+            reset();
+        }
+    });
+
+    client.on('reset', function () {
+        reset();
+        io.sockets.emit('gameState', curState);
     });
 
     client.on('guess', function (guess) {
-        if (guess == answer) {
+        if (guess.toLowerCase() == answer) {
             curState = gameStates.FINISHED;
             io.sockets.emit('gameState', curState);
             io.sockets.emit('winner', nickname);
+            io.sockets.emit('word', answer);
         }
+    });
+
+    client.on('pilotDraw', function (data) {
+        Object.keys(players).map((player) => {
+            if (player != pilot) {
+                players[player].emit('pilotDraw', data);
+            }
+        });
     });
 
     client.on('start', function () {
         if (Object.keys(players).length < 2) {
             return;
         }
-
         curState = gameStates.GUESSING;
         io.sockets.emit('gameState', curState);
         let nicknames = Object.keys(players);
@@ -69,7 +95,7 @@ io.on('connection', function (client) {
             players[player].emit('isPilot', player == pilot);
         });
 
-        answer = "airplane";
+        answer = funnyWords().toLowerCase();
 
         players[pilot].emit('word', answer);
     });

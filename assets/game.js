@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:3000/');
+var socket = io.connect('http://ben-surfacebook.wireless.rit.edu:3000/');
 
 const gameStates = {
     NOT_CONNECTED: 0,
@@ -9,11 +9,13 @@ const gameStates = {
 
 angular.module('skywrite', [])
     .controller('GameController', function($scope) {
+        prepareCanvas();
         let game = this;
         game.curState = gameStates.NOT_CONNECTED;
-
         game.players = [];
-
+        game.isPilot = false;
+        game.word = '';
+        game.winner = '';
         game.nickname = 'Guest' + (Math.floor(Math.random() * 1000));
 
         game.start = function() {
@@ -24,31 +26,47 @@ angular.module('skywrite', [])
             socket.emit('join', game.nickname);
         };
 
-        game.isPilot = false;
-
-        game.word = '';
+        game.reset = function() {
+            socket.emit('reset');
+        };
 
         game.sendGuess = function() {
             socket.emit('guess', game.guess);
             game.guess = '';
         };
-        
         socket.on("gameState", function (value) {
             $scope.$apply(function() {
                 game.curState = value;
             });
-            console.log('got cur state of ' + value);
 
             if (value == gameStates.GUESSING) {
-                setTimeout(function() {
-                    prepareCanvas();
-                }, 100);
+                game.isPilot = false;
+                game.word = '';
+                game.winner = '';
+                game.guess = '';
+                window.clickX = [];
+                window.clickY = [];
+                window.clickDrag = [];
+                redraw();
             }
+        });
+
+        socket.on('pilotDraw', function (data) {
+            let positions = JSON.parse(data);
+            addNonPilotClick(positions[0], positions[1], positions[2]);
+            redraw();
+        });
+
+        socket.on('winner', function (data) {
+            $scope.$apply(function() {
+                game.winner = data;
+            });
         });
 
         socket.on("isPilot", function (value) {
             $scope.$apply(function() {
                 game.isPilot = value;
+                window.isPilot = value;
             });
             console.log('isPilot: ' + value);
         });

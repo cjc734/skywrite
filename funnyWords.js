@@ -5,6 +5,6 @@ var funnyWords = ["buccaneer","floozy","monkey","Shih Tzu","succubus",
 "locker","egg","pillow","rocket","sheep","shoe","snake","car","pig","phone",
 "volcano"];
 
-function randomFunnyWord(){
+module.exports = function randomFunnyWord(){
 	return funnyWords[Math.floor(Math.random() * funnyWords.length)];
 }

@@ -56,29 +56,36 @@ function prepareCanvas()
 	// Add mouse events
 	// ----------------
 	$('#canvas').mousedown(function(e){
-  var mouseX = e.pageX - $('#canvas').get(0).offsetLeft;
-  var mouseY = e.pageY - $('#canvas').get(0).offsetTop;
   document.querySelector("#sfx1").play();
-
-  paint = true;
-  addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, false);
+  if (window.isPilot) {	
+	var mouseX = e.pageX - $('#canvas').get(0).offsetLeft;
+	var mouseY = e.pageY - $('#canvas').get(0).offsetTop;
+    paint = true;
+  	addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, false);
+  }
   redraw();
 });
 
 	$('#canvas').mousemove(function(e){
-		addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, paint);
-		planeX = e.pageX - $('#canvas').get(0).offsetLeft;
-		planeY = e.pageY - $('#canvas').get(0).offsetTop;
-		redraw();
+		if (window.isPilot) {
+			addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, paint);
+			planeX = e.pageX - $('#canvas').get(0).offsetLeft;
+			planeY = e.pageY - $('#canvas').get(0).offsetTop;
+			redraw();
+		}
 	});
 
 	$('#canvas').mouseup(function(e){
-		paint = false;
-	  	redraw();
+		if (window.isPilot) {
+			paint = false;
+		    redraw();
+		}
 	});
 
 	$('#canvas').mouseleave(function(e){
-		paint = false;
+		if (window.isPilot) {
+			paint = false;
+		}
 	});
 }
 
@@ -97,6 +104,15 @@ function addClick(x, y, dragging)
   clickX.push(x);
   clickY.push(y);
   clickDrag.push(dragging);
+  if (window.isPilot) {
+  	socket.emit('pilotDraw', JSON.stringify([x, y, dragging]));
+  }
+}
+
+function addNonPilotClick(x, y, dragging) {
+	addClick(x, y, dragging);
+	planeX = x;
+	planeY = y;
 }
 
 /**

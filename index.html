@@ -13,14 +13,14 @@
   <body ng-app="skywrite">
     <div ng-controller="GameController as game">
       <img src="assets/images/logo.png" id="logo">
-      <div ng-switch="game.curState">
-        <div ng-switch-when="0">
+      <div>
+        <div ng-show="game.curState == 0">
             <input ng-model="game.nickname" placeholder="Enter Nickname">
             <button type="button" ng-click="game.join()">
               Set Name
             </button>
         </div>
-        <div ng-switch-when="1">
+        <div ng-show="game.curState == 1">
           Lobby:
           <ul>
             <li ng-repeat="player in game.players">
@@ -31,7 +31,7 @@
             Start Game!
           </button>
         </div>
-        <div ng-switch-when="2">
+        <div ng-show="game.curState == 2">
             <div id="canvasDiv"></div>
             <div ng-switch="game.isPilot">
               <div ng-switch-when="true">
@@ -43,8 +43,15 @@
             </div>
             <audio id="sfx1" src="assets/sfx1.mp3" ></audio>
         </div>
-        <div ng-switch-when="3">
-          GAME OVER!
+        <div ng-show="game.curState == 3">
+          <h2>GAME OVER!</h2>
+          <h3>The word was {{game.word}}</h3>
+          <div ng-if="game.winner">
+            <h3>{{game.winner}} guessed correctly!</h3>
+          </div>
+          <button type="button" ng-click="game.reset()">
+              Back to Lobby
+          </button>
         </div>
       </div>
     </div>
