@@ -20,6 +20,8 @@ let curState = gameStates.LOBBY;
 
 let players = {};
 
+let playerLeaderboard = {};
+
 let pilot = null;
 
 let answer = null;
@@ -49,6 +51,9 @@ io.on('connection', function (client) {
     client.on('disconnect', function () {
         if(nickname) {
             delete players[nickname];
+            if (nickname in playerLeaderboard) {
+                delete playerLeaderboard[nickname];
+            }
             console.log(nickname + ' disconnected');
         }
         if (Object.keys(players).length > 0) {
@@ -67,9 +72,15 @@ io.on('connection', function (client) {
     client.on('guess', function (guess) {
         if (guess.toLowerCase() == answer) {
             curState = gameStates.FINISHED;
+            if (nickname in playerLeaderboard) {
+                playerLeaderboard[nickname]++;
+            } else {
+                playerLeaderboard[nickname] = 1;
+            }
             io.sockets.emit('gameState', curState);
             io.sockets.emit('winner', nickname);
             io.sockets.emit('word', answer);
+            io.sockets.emit('leaderboard', JSON.stringify(playerLeaderboard));
         }
     });
 

@@ -25,12 +25,13 @@
         Lobby:
         <ul>
           <li ng-repeat="player in game.players">
-            {{player}}
+            {{player}} {{game.leaderboard[player] ? '(Won ' + game.leaderboard[player] + ')' : ''}}
           </li>
         </ul>
-        <button type="button" ng-click="game.start()">
+        <button type="button" ng-show="game.players.length > 1" ng-click="game.start()">
           Start Game!
         </button>
+        <em ng-hide="game.players.length > 1">Waiting for more players to join...</em>
       </div>
       <div ng-show="game.curState == 2">
         <div id="canvasDiv"></div>
