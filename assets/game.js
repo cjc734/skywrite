@@ -1,4 +1,4 @@
-var socket = io.connect('http://skywrite.website');
+var socket = io.connect('http://localhost:3000');
 
 const gameStates = {
     NOT_CONNECTED: 0,
@@ -8,36 +8,51 @@ const gameStates = {
 };
 
 angular.module('skywrite', [])
-    .controller('GameController', function($scope) {
+    .controller('GameController', function ($scope) {
         prepareCanvas();
         let game = this;
         game.curState = gameStates.NOT_CONNECTED;
         game.players = [];
         game.isPilot = false;
         game.isWrong = false;
+        game.timerID = '';
         game.word = '';
         game.winner = '';
         game.nickname = 'Guest' + (Math.floor(Math.random() * 1000));
 
-        game.start = function() {
+        game.start = function () {
             socket.emit("start");
         };
 
-        game.join = function() {
+        game.join = function () {
             socket.emit('join', game.nickname);
         };
 
-        game.reset = function() {
+        game.reset = function () {
             socket.emit('reset');
         };
 
-        game.sendGuess = function() {
+        game.sendGuess = function () {
             socket.emit('guess', game.guess);
+            clearTimeout(game.timerID);
             game.isWrong = true;
+            game.timerID = setTimeout(function () {
+                $scope.$apply(function () {
+                    game.isWrong = false;
+                });
+
+            }, 3000)
             game.guess = '';
         };
+
+        game.keyPress = function (keyCode) {
+            if (keyCode == 13) {
+                game.sendGuess();
+            }
+        }
+
         socket.on("gameState", function (value) {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 game.curState = value;
             });
 
@@ -61,13 +76,13 @@ angular.module('skywrite', [])
         });
 
         socket.on('winner', function (data) {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 game.winner = data;
             });
         });
 
         socket.on("isPilot", function (value) {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 game.isPilot = value;
                 window.isPilot = value;
             });
@@ -75,20 +90,20 @@ angular.module('skywrite', [])
         });
 
         socket.on("word", function (value) {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 game.word = value;
             });
             console.log('word: ' + value);
         });
 
         socket.on("players", function (players) {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 game.players = JSON.parse(players);
             });
             console.log('got players: ' + players);
         });
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', function () {
             game.curState = gameStates.NOT_CONNECTED;
         });
     });

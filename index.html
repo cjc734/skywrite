@@ -40,7 +40,7 @@
           </div>
           <div ng-switch-default>
             Guess:
-            <input ng-model="game.guess">
+            <input ng-keyup="game.keyPress($event.keyCode)" ng-model="game.guess">
             <button type="button" ng-click="game.sendGuess()">Guess!</button>
           </div>
           <div ng-switch="game.isWrong">
