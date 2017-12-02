@@ -13,6 +13,7 @@
 
 <body ng-app="skywrite">
   <div ng-controller="GameController as game">
+    <div ng-show="game.curState == 2 && game.timeLeft" id="timerDiv">:{{game.timeLeft}}</div>
     <img src="assets/images/logo.png" id="logo">
     <div>
       <div ng-show="game.curState == 0">
@@ -50,7 +51,6 @@
             </div>
           </div>
         </div>
-        <div id="timerDiv">{{game.timeLeft}}</div>
 		<audio id="sfx1" src="assets/sfx1.mp3"></audio>
       </div>
       <div ng-show="game.curState == 3">

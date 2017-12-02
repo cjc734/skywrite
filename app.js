@@ -34,6 +34,19 @@ function reset() {
     answer = null;
     pilot = null;
     curState = gameStates.LOBBY;
+    if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+    }
+}
+
+function endGame() {
+    curState = gameStates.FINISHED;
+    io.sockets.emit('gameState', curState);
+    io.sockets.emit('word', answer);
+    io.sockets.emit('leaderboard', JSON.stringify(playerLeaderboard));
+    clearInterval(timerId);
+    timerId = null;
 }
 
 io.on('connection', function (client) {
@@ -56,6 +69,11 @@ io.on('connection', function (client) {
             if (nickname in playerLeaderboard) {
                 delete playerLeaderboard[nickname];
             }
+
+            if (nickname == pilot || Object.keys(players).length <= 1) {
+                // If the pilot leaves or they are the only one left, end the game
+                endGame();
+            }
             console.log(nickname + ' disconnected');
         }
         if (Object.keys(players).length > 0) {
@@ -73,18 +91,13 @@ io.on('connection', function (client) {
 
     client.on('guess', function (guess) {
         if (guess.toLowerCase() == answer) {
-            curState = gameStates.FINISHED;
             if (nickname in playerLeaderboard) {
                 playerLeaderboard[nickname]++;
             } else {
                 playerLeaderboard[nickname] = 1;
             }
-            io.sockets.emit('gameState', curState);
             io.sockets.emit('winner', nickname);
-            io.sockets.emit('word', answer);
-			io.sockets.emit('leaderboard', JSON.stringify(playerLeaderboard));
-			clearInterval(timerId);
-			timerId = null;
+            endGame();
         }
     });
 
