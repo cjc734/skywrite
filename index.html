@@ -15,33 +15,32 @@
   <div ng-controller="GameController as game">
     <img src="assets/images/logo.png" id="logo">
     <div>
-      <div ng-show="game.curState == 0">
-        <input ng-model="game.nickname" placeholder="Enter Nickname">
-        <button type="button" ng-click="game.join()">
+      <div ng-show="game.curState == 0" class="wordbox">
+        <input ng-model="game.nickname" placeholder="Enter Nickname" class="guessbox">
+        <button type="button" ng-click="game.join()" class="guessbutton"> 
           Set Name
         </button>
       </div>
-      <div ng-show="game.curState == 1">
-        Lobby:
-        <ul>
+      <div ng-show="game.curState == 1" class="lobby">
+        <span class="lobbytitle">Lobby</span>
+        <ul class="lobbylist">
           <li ng-repeat="player in game.players">
             {{player}}
           </li>
         </ul>
-        <button type="button" ng-click="game.start()">
+        <button type="button" ng-click="game.start()" class="lobbybutton">
           Start Game!
         </button>
       </div>
       <div ng-show="game.curState == 2">
         <div id="canvasDiv"></div>
-        <div ng-switch="game.isPilot">
-          <div ng-switch-when="true">
+        <div ng-switch="game.isPilot" class="wordbox">
+          <div ng-switch-when="true" class="pilotphrase">
             You are the pilot! Your word is {{game.word}}
           </div>
           <div ng-switch-default>
-            Guess:
-            <input ng-keyup="game.keyPress($event.keyCode)" ng-model="game.guess">
-            <button type="button" ng-click="game.sendGuess()">Guess!</button>
+            <input ng-keyup="game.keyPress($event.keyCode)" ng-model="game.guess" class="guessbox" placeholder="Guess">
+            <button type="button" class="guessbutton" ng-click="game.sendGuess()">Guess!</button>
           </div>
           <div ng-switch="game.isWrong">
             <div ng-switch-when="true">

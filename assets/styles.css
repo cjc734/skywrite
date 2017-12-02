@@ -6,7 +6,7 @@
 }
 
 #logo {
-    height: 100px;
+    height: 150px;
     width: auto;
     display: block;
     margin: 0 auto;
@@ -14,4 +14,83 @@
 
 body {
     background-color: #00bfff;
+    font-size: 16px;
+    color:white;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.wordbox{
+    width: 1000px;
+    margin: 10px auto 10px auto;
+    text-align: center;
+}
+
+.guessbox{
+    height:40px;
+    border:none;
+    width:400px;
+    padding: 0 0 0 5px;
+}
+
+.guessbutton {
+    background-color: rgb(201, 7, 7);
+    border: none;
+    color: white;
+    height:40px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight:bold;
+}
+
+.pilotphrase{
+    font-size: 20px;
+}
+
+.lobby{
+    width:500px;
+    margin:auto;
+}
+
+.lobbylist{
+    background:rgba(255, 255, 255, 0.904);
+    margin: 0;
+    box-sizing: border-box;
+    padding:15px;
+    list-style: none;
+    color:black;
+}
+
+.lobbytitle{
+    background-color: rgb(37, 37, 37);
+    border: none;
+    color: white;
+    height:50px;
+    width:500px;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    font-weight:bold;
+}
+
+.lobbybutton{
+    background-color: rgb(201, 7, 7);
+    border: none;
+    color: white;
+    height:50px;
+    width:500px;
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight:bold;
+    border-radius: 0 0 5px 5px;
 }
