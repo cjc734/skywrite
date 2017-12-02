@@ -1,16 +1,9 @@
-var funnyWords = ["bamboozled","bazinga","bevy","bifurcate","bilirubin",
-"bobolink","buccaneer","bulgur","bumfuzzle","canoodle","cantankerous","carbuncle",
-"caterwaul","cattywampus","cheeky","conniption","coot","didgeridoo","dingy",
-"doodle","doohickey","eschew","fiddledeedee","finagle","flanker","floozy",
-"fungible","girdle","gobsmacked","grog","gumption","gunky","hitherto",
-"hoi polloi","hornswoggle","hullabaloo","indubitably","janky","kahuna","katydid",
-"kerplunk","kinkajou","knickers","lackadaisical","loopy","manscape","monkey"
-,"mugwump","namby-pamby","noggin","pantaloons","passel","persnickety",
-"popinjay","prestidigitation","proctor","rapscallion","rookery","rumpus",
-"scootch","scuttlebutt","shebang","Shih Tzu","smegma","snarky","snuffle",
-"spelunker","spork","sprocket","squeegee","succubus","tater","tuber","tuchis",
-"viper","waddle","walkabout","wasabi","weasel","wenis","whatnot","wombat","wonky",
-"zeitgeist"];
+var funnyWords = ["buccaneer","floozy","monkey","Shih Tzu","succubus",
+"viper","weasel","baby","church","bear","water","ball","brethren","chicken",
+"pot","corn","cake","day","dentist","cup","dragon","lantern","chef","grandma",
+"laptop","grave","ice cream","killer","jet","ski","jungle","cat","knight","bulb",
+"locker","egg","pillow","rocket","sheep","shoe","snake","car","pig","phone",
+"volcano"];
 
 function randomFunnyWord(){
 	return funnyWords[Math.floor(Math.random() * funnyWords.length)];
