@@ -20,12 +20,14 @@ angular.module('skywrite', [])
         game.winner = '';
         game.nickname = 'Guest' + (Math.floor(Math.random() * 1000));
         game.leaderboard = {};
+        game.hasJoined = false;
 
         game.start = function () {
             socket.emit("start");
         };
 
         game.join = function () {
+            game.hasJoined = true;
             socket.emit('join', game.nickname);
         };
 
@@ -53,6 +55,9 @@ angular.module('skywrite', [])
         }
 
         socket.on("gameState", function (value) {
+            if (!game.hasJoined) {
+                return;
+            }
             $scope.$apply(function () {
                 game.curState = value;
             });
