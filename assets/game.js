@@ -1,4 +1,4 @@
-var socket = io.connect('http://ben-surfacebook.wireless.rit.edu:3000/');
+var socket = io.connect('http://skywrite.website');
 
 const gameStates = {
     NOT_CONNECTED: 0,
@@ -14,6 +14,7 @@ angular.module('skywrite', [])
         game.curState = gameStates.NOT_CONNECTED;
         game.players = [];
         game.isPilot = false;
+        game.isWrong = false;
         game.word = '';
         game.winner = '';
         game.nickname = 'Guest' + (Math.floor(Math.random() * 1000));
@@ -32,6 +33,7 @@ angular.module('skywrite', [])
 
         game.sendGuess = function() {
             socket.emit('guess', game.guess);
+            game.isWrong = true;
             game.guess = '';
         };
         socket.on("gameState", function (value) {
@@ -41,6 +43,7 @@ angular.module('skywrite', [])
 
             if (value == gameStates.GUESSING) {
                 game.isPilot = false;
+                game.isWrong = false;
                 game.word = '';
                 game.winner = '';
                 game.guess = '';
