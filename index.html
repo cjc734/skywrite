@@ -25,12 +25,13 @@
         <span class="lobbytitle">Lobby</span>
         <ul class="lobbylist">
           <li ng-repeat="player in game.players">
-            {{player}}
+            {{player}} {{game.leaderboard[player] ? '(Won ' + game.leaderboard[player] + ')' : ''}}
           </li>
         </ul>
-        <button type="button" ng-click="game.start()" class="lobbybutton">
+        <button type="button" ng-show="game.players.length > 1" ng-click="game.start()" class="lobbybutton"> 
           Start Game!
         </button>
+        <em ng-hide="game.players.length > 1">Waiting for more players to join...</em>
       </div>
       <div ng-show="game.curState == 2">
         <div id="canvasDiv"></div>
@@ -48,7 +49,8 @@
             </div>
           </div>
         </div>
-        <audio id="sfx1" src="assets/sfx1.mp3"></audio>
+        <div id="timerDiv">{{game.timeLeft}}</div>
+		<audio id="sfx1" src="assets/sfx1.mp3"></audio>
       </div>
       <div ng-show="game.curState == 3">
         <h2>GAME OVER!</h2>

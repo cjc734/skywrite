@@ -4,6 +4,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
 var funnyWords = require('./funnyWords');
+var timer = require('./timer');
 
 app.use('/assets', express.static(__dirname + '/assets'));
 app.get('/', function (req, res, next) {
@@ -20,10 +21,13 @@ let curState = gameStates.LOBBY;
 
 let players = {};
 
+let playerLeaderboard = {};
+
 let pilot = null;
 
 let answer = null;
 
+let timerId = null;
 
 function reset() {
     let players = {};
@@ -49,6 +53,9 @@ io.on('connection', function (client) {
     client.on('disconnect', function () {
         if(nickname) {
             delete players[nickname];
+            if (nickname in playerLeaderboard) {
+                delete playerLeaderboard[nickname];
+            }
             console.log(nickname + ' disconnected');
         }
         if (Object.keys(players).length > 0) {
@@ -67,9 +74,17 @@ io.on('connection', function (client) {
     client.on('guess', function (guess) {
         if (guess.toLowerCase() == answer) {
             curState = gameStates.FINISHED;
+            if (nickname in playerLeaderboard) {
+                playerLeaderboard[nickname]++;
+            } else {
+                playerLeaderboard[nickname] = 1;
+            }
             io.sockets.emit('gameState', curState);
             io.sockets.emit('winner', nickname);
             io.sockets.emit('word', answer);
+			io.sockets.emit('leaderboard', JSON.stringify(playerLeaderboard));
+			clearInterval(timerId);
+			timerId = null;
         }
     });
 
@@ -98,6 +113,13 @@ io.on('connection', function (client) {
         answer = funnyWords().toLowerCase();
 
         players[pilot].emit('word', answer);
+		timerId = timer(60, function(){
+			curState = gameStates.FINISHED;
+            io.sockets.emit('gameState', curState);
+            io.sockets.emit('word', answer);
+		}, function(seconds){
+			io.sockets.emit('timeLeft', seconds);
+		});
     });
 });
 
