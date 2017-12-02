@@ -1,4 +1,4 @@
-var socket = io.connect('http://ben-surfacebook.wireless.rit.edu:3000/');
+var socket = io.connect('localhost:3000/');
 
 const gameStates = {
     NOT_CONNECTED: 0,
@@ -17,6 +17,8 @@ angular.module('skywrite', [])
         game.word = '';
         game.winner = '';
         game.nickname = 'Guest' + (Math.floor(Math.random() * 1000));
+		game.timeLeft = '';
+		
 
         game.start = function() {
             socket.emit("start");
@@ -44,6 +46,7 @@ angular.module('skywrite', [])
                 game.word = '';
                 game.winner = '';
                 game.guess = '';
+				game.timeLeft = '';
                 window.clickX = [];
                 window.clickY = [];
                 window.clickDrag = [];
@@ -85,6 +88,13 @@ angular.module('skywrite', [])
             console.log('got players: ' + players);
         });
 
+		socket.on("timeLeft", function (timeLeft) {
+            $scope.$apply(function() {
+                game.timeLeft = timeLeft;
+            });
+            console.log('got time left: ' + timeLeft);
+        });
+		
         socket.on('disconnect', function() {
             game.curState = gameStates.NOT_CONNECTED;
         });

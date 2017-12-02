@@ -4,6 +4,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
 var funnyWords = require('./funnyWords');
+var timer = require('./timer');
 
 app.use('/assets', express.static(__dirname + '/assets'));
 app.get('/', function (req, res, next) {
@@ -24,6 +25,7 @@ let pilot = null;
 
 let answer = null;
 
+let timerId = null;
 
 function reset() {
     let players = {};
@@ -70,6 +72,8 @@ io.on('connection', function (client) {
             io.sockets.emit('gameState', curState);
             io.sockets.emit('winner', nickname);
             io.sockets.emit('word', answer);
+			clearInterval(timerId);
+			timerId = null;
         }
     });
 
@@ -98,6 +102,13 @@ io.on('connection', function (client) {
         answer = funnyWords().toLowerCase();
 
         players[pilot].emit('word', answer);
+		timerId = timer(60, function(){
+			curState = gameStates.FINISHED;
+            io.sockets.emit('gameState', curState);
+            io.sockets.emit('word', answer);
+		}, function(seconds){
+			io.sockets.emit('timeLeft', seconds);
+		});
     });
 });
 

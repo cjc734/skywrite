@@ -41,6 +41,7 @@
                   Guess: <input ng-model="game.guess"><button type="button" ng-click="game.sendGuess()">Guess!</button>
               </div>
             </div>
+			<div id="timerDiv">{{game.timeLeft}}</div>
             <audio id="sfx1" src="assets/sfx1.mp3" ></audio>
         </div>
         <div ng-show="game.curState == 3">
