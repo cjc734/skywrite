@@ -21,13 +21,15 @@ angular.module('skywrite', [])
         game.winner = '';
         game.nickname = 'Guest' + (Math.floor(Math.random() * 1000));
 		game.timeLeft = '';
-		
+        game.leaderboard = {};
+        game.hasJoined = false;
 
         game.start = function () {
             socket.emit("start");
         };
 
         game.join = function () {
+            game.hasJoined = true;
             socket.emit('join', game.nickname);
         };
 
@@ -55,6 +57,9 @@ angular.module('skywrite', [])
         }
 
         socket.on("gameState", function (value) {
+            if (!game.hasJoined) {
+                return;
+            }
             $scope.$apply(function () {
                 game.curState = value;
             });
@@ -90,21 +95,24 @@ angular.module('skywrite', [])
                 game.isPilot = value;
                 window.isPilot = value;
             });
-            console.log('isPilot: ' + value);
         });
 
         socket.on("word", function (value) {
             $scope.$apply(function () {
                 game.word = value;
             });
-            console.log('word: ' + value);
         });
 
         socket.on("players", function (players) {
             $scope.$apply(function () {
                 game.players = JSON.parse(players);
             });
-            console.log('got players: ' + players);
+        });
+
+        socket.on("leaderboard", function (leaderboard) {
+            $scope.$apply(function() {
+                game.leaderboard = JSON.parse(leaderboard);
+            });
         });
 
 		socket.on("timeLeft", function (timeLeft) {
