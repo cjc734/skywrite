@@ -29,6 +29,8 @@ let answer = null;
 
 let timerId = null;
 
+let lastPilot = null;
+
 function reset() {
     let players = {};
     answer = null;
@@ -117,8 +119,9 @@ io.on('connection', function (client) {
         io.sockets.emit('gameState', curState);
         let nicknames = Object.keys(players);
 
-        let nextPilotChoices = nicknames.filter(n => n != pilot);       
+        let nextPilotChoices = nicknames.filter(n => n != lastPilot);       
         pilot = nextPilotChoices[Math.floor(Math.random() * nextPilotChoices.length)];
+        lastPilot = pilot;
 
         console.log(pilot + " chosen as the pilot");
 
