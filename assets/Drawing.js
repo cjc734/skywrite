@@ -64,6 +64,8 @@ function prepareCanvas()
 			paint = true;
 			
 			addClick(e.originalEvent.touches[0].pageX - $('#canvas').get(0).offsetLeft, e.originalEvent.touches[0].pageY - $('#canvas').get(0).offsetTop, false);
+			e.originalEvent.preventDefault();
+			return false;
 		}
 	});
 	$('#canvas').on("mousedown", function(e){
@@ -86,6 +88,8 @@ function prepareCanvas()
 			planeY = e.originalEvent.touches[0].pageY - $('#canvas').get(0).offsetTop;
 			
 			redraw();
+			e.originalEvent.preventDefault();
+			return false;
 		}
 	});
 
