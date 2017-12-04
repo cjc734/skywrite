@@ -55,7 +55,18 @@ function prepareCanvas()
 
 	// Add mouse events
 	// ----------------
-	$('#canvas').mousedown(function(e){
+	console.log($('#canvas'));
+	$('#canvas').on("touchstart", function(e){
+		if(window.isPilot){
+			console.log(e);
+			var mouseX = e.originalEvent.touches[0].pageX - $('#canvas').get(0).offsetLeft;
+			var mouseY = e.originalEvent.touches[0].pageY - $('#canvas').get(0).offsetTop;
+			paint = true;
+			
+			addClick(e.originalEvent.touches[0].pageX - $('#canvas').get(0).offsetLeft, e.originalEvent.touches[0].pageY - $('#canvas').get(0).offsetTop, false);
+		}
+	});
+	$('#canvas').on("mousedown", function(e){
   document.querySelector("#sfx1").play();
   if (window.isPilot) {	
 	var mouseX = e.pageX - $('#canvas').get(0).offsetLeft;
@@ -63,10 +74,22 @@ function prepareCanvas()
     paint = true;
   	addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, false);
   }
+  $
   redraw();
 });
 
-	$('#canvas').mousemove(function(e){
+	$('#canvas').on("touchmove",function(e){
+		if (window.isPilot) {
+			console.log(e);
+			addClick(e.originalEvent.touches[0].pageX - $('#canvas').get(0).offsetLeft, e.originalEvent.touches[0].pageY - $('#canvas').get(0).offsetTop, paint);
+			planeX = e.originalEvent.touches[0].pageX - $('#canvas').get(0).offsetLeft;
+			planeY = e.originalEvent.touches[0].pageY - $('#canvas').get(0).offsetTop;
+			
+			redraw();
+		}
+	});
+
+	$('#canvas').on("mousemove",function(e){
 		if (window.isPilot) {
 			addClick(e.pageX - $('#canvas').get(0).offsetLeft, e.pageY - $('#canvas').get(0).offsetTop, paint);
 			planeX = e.pageX - $('#canvas').get(0).offsetLeft;
@@ -75,14 +98,14 @@ function prepareCanvas()
 		}
 	});
 
-	$('#canvas').mouseup(function(e){
+	$('#canvas').on("mouseup touchend",function(e){
 		if (window.isPilot) {
 			paint = false;
 		    redraw();
 		}
 	});
 
-	$('#canvas').mouseleave(function(e){
+	$('#canvas').on("mouseleave touchleave",function(e){
 		if (window.isPilot) {
 			paint = false;
 		}

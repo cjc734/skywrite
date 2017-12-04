@@ -3,6 +3,7 @@
     margin: 0 auto;
     cursor: none;
     border: 5px solid #eee;
+	touch-action: none;
 }
 
 #logo {
