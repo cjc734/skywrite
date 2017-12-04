@@ -116,7 +116,10 @@ io.on('connection', function (client) {
         curState = gameStates.GUESSING;
         io.sockets.emit('gameState', curState);
         let nicknames = Object.keys(players);
-        pilot = nicknames[Math.floor(Math.random() * nicknames.length)];
+
+        let nextPilotChoices = nicknames.filter(n => n != pilot);       
+        pilot = nextPilotChoices[Math.floor(Math.random() * nextPilotChoices.length)];
+
         console.log(pilot + " chosen as the pilot");
 
         nicknames.map((player) => {
